@@ -7,4 +7,5 @@
     <string name="symbol_search">ramz albahth</string>
     <string name="action_example">aleamal sabil almithal</string>
     <string name="content_test">bahath ean al\'awraq almaliat ramz</string>
+    <string name="invalid_stock_message">ramz alssahm salih :</string>
 </resources>

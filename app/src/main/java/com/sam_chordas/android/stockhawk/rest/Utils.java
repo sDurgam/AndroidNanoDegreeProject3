@@ -25,20 +25,36 @@ public class Utils {
     ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
     JSONObject jsonObject = null;
     JSONArray resultsArray = null;
-    try{
+    try
+    {
       jsonObject = new JSONObject(JSON);
       if (jsonObject != null && jsonObject.length() != 0){
         jsonObject = jsonObject.getJSONObject("query");
         int count = Integer.parseInt(jsonObject.getString("count"));
-        if (count == 1){
+        if (count == 1)
+        {
           jsonObject = jsonObject.getJSONObject("results")
-              .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
-        } else{
+                  .getJSONObject("quote");
+          String ask = jsonObject.getString("Ask");
+          String change = jsonObject.getString("Change");
+          String symbol = jsonObject.getString("symbol");
+          String bid = jsonObject.getString("Bid");
+          String changeInPercent = jsonObject.getString("ChangeinPercent");
+          if (change.equals("null")  && bid.equals("null") && changeInPercent.equals("null"))
+          {
+            return batchOperations;
+          }
+          else
+          {
+            batchOperations.add(buildBatchOperation(jsonObject));
+          }
+        } else
+        {
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
-
-          if (resultsArray != null && resultsArray.length() != 0){
-            for (int i = 0; i < resultsArray.length(); i++){
+          if (resultsArray != null && resultsArray.length() != 0)
+          {
+            for (int i = 0; i < resultsArray.length(); i++)
+            {
               jsonObject = resultsArray.getJSONObject(i);
               batchOperations.add(buildBatchOperation(jsonObject));
             }
@@ -51,46 +67,66 @@ public class Utils {
     return batchOperations;
   }
 
-  public static String truncateBidPrice(String bidPrice){
-    bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+  public static String truncateBidPrice(String bidPrice)
+  {
+    if(bidPrice != null && !bidPrice.equals("null"))
+    {
+      bidPrice = String.format("%.2f", Float.parseFloat(bidPrice));
+    }
     return bidPrice;
   }
 
-  public static String truncateChange(String change, boolean isPercentChange){
-    String weight = change.substring(0,1);
-    String ampersand = "";
-    if (isPercentChange){
-      ampersand = change.substring(change.length() - 1, change.length());
-      change = change.substring(0, change.length() - 1);
+  public static String truncateChange(String change, boolean isPercentChange)
+  {
+    if(change != null && !change.equals("null"))
+    {
+      String weight = change.substring(0, 1);
+      String ampersand = "";
+      if (isPercentChange) {
+        ampersand = change.substring(change.length() - 1, change.length());
+        change = change.substring(0, change.length() - 1);
+      }
+      change = change.substring(1, change.length());
+      double round = (double) Math.round(Double.parseDouble(change) * 100) / 100;
+      change = String.format("%.2f", round);
+      StringBuffer changeBuffer = new StringBuffer(change);
+      changeBuffer.insert(0, weight);
+      changeBuffer.append(ampersand);
+      change = changeBuffer.toString();
     }
-    change = change.substring(1, change.length());
-    double round = (double) Math.round(Double.parseDouble(change) * 100) / 100;
-    change = String.format("%.2f", round);
-    StringBuffer changeBuffer = new StringBuffer(change);
-    changeBuffer.insert(0, weight);
-    changeBuffer.append(ampersand);
-    change = changeBuffer.toString();
     return change;
   }
 
   public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
-        QuoteProvider.Quotes.CONTENT_URI);
+            QuoteProvider.Quotes.CONTENT_URI);
     try {
-      String change = jsonObject.getString("Change");
-      builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
-      builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(jsonObject.getString("Bid")));
-      builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(
-          jsonObject.getString("ChangeinPercent"), true));
-      builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
-      builder.withValue(QuoteColumns.ISCURRENT, 1);
-      if (change.charAt(0) == '-'){
-        builder.withValue(QuoteColumns.ISUP, 0);
-      }else{
-        builder.withValue(QuoteColumns.ISUP, 1);
-      }
 
-    } catch (JSONException e){
+      String change = jsonObject.getString("Change");
+      String symbol = jsonObject.getString("symbol");
+      String bid = jsonObject.getString("Bid");
+      String changeInPercent = jsonObject.getString("ChangeinPercent");
+
+      if (change.equals("null")  && bid.equals("null") && changeInPercent.equals("null"))
+      {
+
+      }
+      else
+      {
+        builder.withValue(QuoteColumns.SYMBOL, symbol);
+        builder.withValue(QuoteColumns.BIDPRICE, truncateBidPrice(bid));
+        builder.withValue(QuoteColumns.PERCENT_CHANGE, truncateChange(changeInPercent, true));
+        builder.withValue(QuoteColumns.CHANGE, truncateChange(change, false));
+        builder.withValue(QuoteColumns.ISCURRENT, 1);
+        if (change.charAt(0) == '-') {
+          builder.withValue(QuoteColumns.ISUP, 0);
+        } else {
+          builder.withValue(QuoteColumns.ISUP, 1);
+        }
+
+      }
+    }
+    catch(JSONException e){
       e.printStackTrace();
     }
     return builder.build();
