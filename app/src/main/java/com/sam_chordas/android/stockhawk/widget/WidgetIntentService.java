@@ -49,9 +49,8 @@ public class WidgetIntentService extends IntentService
         // Perform this loop procedure for each Today widget
         for (int appWidgetId : appWidgetIds)
         {
-            int layoutId = R.layout.list_item_widget_quote;
+            int layoutId = R.layout.list_item_quote;
             RemoteViews views = new RemoteViews(getPackageName(), layoutId);
-            //Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI, null, null, null, null);
             Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                     new String[]{ QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
                             QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
@@ -69,14 +68,6 @@ public class WidgetIntentService extends IntentService
                 }while(c.moveToNext());
             }
             c.close();
-            // Add the data to the RemoteViews
-            //views.setImageViewResource(R.id.widget_icon, weatherArtResourceId);
-            // Content Descriptions for RemoteViews were only added in ICS MR1
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-//                setRemoteContentDescription(views, description);
-//            }
-//            views.setTextViewText(R.id.widget_high_temperature, formattedMaxTemperature);
-
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MyStocksActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
