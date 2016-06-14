@@ -10,4 +10,11 @@
   <string name="network_toast">Uh-oh! This app requires an internet connection</string>
   <string name="add_stock">Add new Stock</string>
   <string name="invalid_stock_message">Invalid stock symbol:</string>
+  <string name="chart_label">STOCK PRICE</string>
+  <string name="chart_label2">Date</string>
+  <string name="chart_label3">Closing value</string>
+  <string name="str_btn_chart">Date vs Closing Value</string>
+  <string name="scrub_empty">Tap and hold the graph to scrub.</string>
+  <string name="scrub_format">Scrubbing value: %1$s</string>
+  <string name="detailed_stock_message">"Opening detailed stock price for: "</string>
 </resources>

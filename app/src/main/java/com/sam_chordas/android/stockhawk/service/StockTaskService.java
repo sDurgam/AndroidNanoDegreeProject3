@@ -136,7 +136,7 @@ public class StockTaskService extends GcmTaskService{
               @Override
               public void run()
               {
-                String symbol = params.getExtras().getString("symbol");
+                String symbol = params.getExtras().getString("Symbol");
                 String message = mContext.getResources().getString(R.string.invalid_stock_message) + " '" + symbol +"'";
                 Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
               }
