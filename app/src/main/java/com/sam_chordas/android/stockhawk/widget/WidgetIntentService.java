@@ -63,8 +63,8 @@ public class WidgetIntentService extends IntentService
                 do
                 {
                     Log.d("tag", c.getString(1) + "," + c.getString(3));
-                    views.setTextViewText(R.id.widget_stock_symbol, c.getString(1));
-                    views.setTextViewText(R.id.widget_bid_price, c.getString(3));
+                    views.setTextViewText(R.id.stock_symbol, c.getString(1));
+                    views.setTextViewText(R.id.bid_price, c.getString(3));
                 }while(c.moveToNext());
             }
             c.close();
