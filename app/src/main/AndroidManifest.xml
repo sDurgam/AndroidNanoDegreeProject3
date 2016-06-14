@@ -36,7 +36,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MyStocksActivity"></meta-data>
             </activity>
-        <activity android:name="org.achartengine.GraphicalActivity" />
         <service android:name="com.sam_chordas.android.stockhawk.service.StockTaskService"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
             android:exported="true">
@@ -45,10 +44,22 @@
             </intent-filter>
         </service>
         <service android:name="com.sam_chordas.android.stockhawk.service.StockIntentService" />
+        <service android:name=".widget.WidgetIntentService" />
+        <service android:name=".widget.DetailWidgetRemoteViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
+        <receiver android:name=".widget.StockHawkAppWidgetProvider"
+            android:label="@string/title_widget_today">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/stockhawk_appwidget_info" />
+        </receiver>
         <provider
             android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
             android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
-            android:exported="false"/>
+            android:exported="true"/>
     </application>
 
 </manifest>

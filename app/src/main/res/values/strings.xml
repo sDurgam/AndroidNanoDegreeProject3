@@ -17,4 +17,10 @@
   <string name="scrub_empty">Tap and hold the graph to scrub.</string>
   <string name="scrub_format">Scrubbing value: %1$s</string>
   <string name="detailed_stock_message">"Opening detailed stock price for: "</string>
+  <string name="update_widget_msg">update_widget_service</string>
+  <!-- Strings related to Widgets -->
+  <string name="title_widget_today">StockHawk Today</string>
+  <string name="stocks_widget">StockHawk Widget</string>
+  <string name="empty_stock_list">Stock List is empty</string>
+  <string name="selectedsymbol">selectedsymbol</string>
 </resources>

@@ -9,4 +9,6 @@
     <string name="content_test">bahath ean al\'awraq almaliat ramz</string>
     <string name="invalid_stock_message">ramz alssahm salih :</string>
     <string name="detailed_stock_message">fath sier alssahm mufassal ean :</string>
+    <string name="empty_stock_list">qayimat al\'ashum farighatan</string>
+    <string name="stocks_widget">StockHawk alqutaea</string>
 </resources>

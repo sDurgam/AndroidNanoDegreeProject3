@@ -1,6 +1,8 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.LoaderManager;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -9,7 +11,6 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +21,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -38,6 +37,7 @@ import com.sam_chordas.android.stockhawk.rest.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
+import com.sam_chordas.android.stockhawk.widget.StockHawkAppWidgetProvider;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -56,6 +56,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Context mContext;
   private Cursor mCursor;
   boolean isConnected;
+  public static final String ACTION_DATA_UPDATED =
+          "com.sam_chordas.android.stockhawk.app.ACTION_DATA_UPDATED";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -94,22 +96,25 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 {
                   final String symbol = v.getTag().toString();
                   //v.setContentDescription(mContext.getResources().getString(R.string.detailed_stock_message) + symbol);
-                  AccessibilityManager manager = (AccessibilityManager)getSystemService(Context.ACCESSIBILITY_SERVICE);
-                  if (manager.isEnabled()) {
-                    AccessibilityEvent e = AccessibilityEvent.obtain();
-                    e.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
-                    e.setClassName(getClass().getName());
-                    e.setPackageName(getPackageName());
-                    e.getText().add(mContext.getResources().getString(R.string.detailed_stock_message) + symbol);
-                    manager.sendAccessibilityEvent(e);
-                  }
-                  new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                      Intent displaychartIntent = new Intent(mContext, DisplayStockGraphActivity.class);
-                      displaychartIntent.putExtra("selectedsymbol", symbol);
-                      mContext.startActivity(displaychartIntent);
-                    }
-                  }, 500);
+//                  AccessibilityManager manager = (AccessibilityManager)getSystemService(Context.ACCESSIBILITY_SERVICE);
+//                  if (manager.isEnabled()) {
+//                    AccessibilityEvent e = AccessibilityEvent.obtain();
+//                    e.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
+//                    e.setClassName(getClass().getName());
+//                    e.setPackageName(getPackageName());
+//                    e.getText().add(mContext.getResources().getString(R.string.detailed_stock_message) + symbol);
+//                    manager.sendAccessibilityEvent(e);
+//                  }
+//                  new Handler().postDelayed(new Runnable() {
+//                    public void run() {
+//                      Intent displaychartIntent = new Intent(mContext, DisplayStockGraphActivity.class);
+//                      displaychartIntent.putExtra("selectedsymbol", symbol);
+//                      mContext.startActivity(displaychartIntent);
+//                    }
+//                  }, 500);
+                  Intent displaychartIntent = new Intent(mContext, DisplayStockGraphActivity.class);
+                  displaychartIntent.putExtra("selectedsymbol", symbol);
+                  mContext.startActivity(displaychartIntent);
                 }
               }
             }));
@@ -240,7 +245,18 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   @Override
   public void onLoadFinished(Loader<Cursor> loader, Cursor data){
     mCursorAdapter.swapCursor(data);
+    ComponentName name = new ComponentName(this, StockHawkAppWidgetProvider.class);
     mCursor = data;
+  }
+
+  private void UpdateWidgets()
+  {
+    Context context = getApplicationContext();
+    ComponentName name = new ComponentName(this, StockHawkAppWidgetProvider.class);
+     int [] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
+    Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+            .setPackage(context.getPackageName());
+    context.sendBroadcast(dataUpdatedIntent);
   }
 
   @Override

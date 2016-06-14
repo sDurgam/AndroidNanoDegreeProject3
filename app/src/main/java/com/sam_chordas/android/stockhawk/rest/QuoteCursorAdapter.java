@@ -50,22 +50,6 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
   public void onBindViewHolder(final ViewHolder viewHolder, final Cursor cursor){
     viewHolder.symbol.setText(cursor.getString(cursor.getColumnIndex("symbol")));
     viewHolder.itemView.setTag(cursor.getString(cursor.getColumnIndex("symbol")));
-//    viewHolder.symbol.setOnClickListener(new View.OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//        Intent displaychartIntent = new Intent(mContext, DisplayStockGraphActivity.class);
-//        displaychartIntent.putExtra("selectedsymbol", ((TextView) v).getText().toString());
-//        mContext.startActivity(displaychartIntent);
-//      }
-//    });
-//    viewHolder.symbol.setOnTouchListener(new View.OnTouchListener() {
-//      @Override
-//      public boolean onTouch(View v, MotionEvent event)
-//      {
-//        return true;
-//      }
-//    });
-
     viewHolder.bidPrice.setText(cursor.getString(cursor.getColumnIndex("bid_price")));
     int sdk = Build.VERSION.SDK_INT;
     if (cursor.getInt(cursor.getColumnIndex("is_up")) == 1){

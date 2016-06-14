@@ -1,8 +1,11 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -23,7 +26,6 @@ import java.util.TreeMap;
 public class DisplayStockGraphActivity extends AppCompatActivity
 {
     String symbol;
-//    SparkView sparkView;
     TextView scrubInfoTextView;
     LineChart lineChart;
 
@@ -32,15 +34,25 @@ public class DisplayStockGraphActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_selectedstock);
-        if(getIntent().getExtras() != null && getIntent().getExtras().getString("selectedsymbol") != null)
+        String selectedsymbolStr = getResources().getString(R.string.selectedsymbol);
+        if(getIntent().getExtras() != null && getIntent().getExtras().getString(selectedsymbolStr) != null)
         {
-            symbol = getIntent().getExtras().getString("selectedsymbol");
+            symbol = getIntent().getExtras().getString(selectedsymbolStr);
+            lineChart = (LineChart) findViewById(R.id.chart);
+            AccessibilityManager manager = (AccessibilityManager)getSystemService(Context.ACCESSIBILITY_SERVICE);
+            if (manager.isEnabled()) {
+                AccessibilityEvent e = AccessibilityEvent.obtain();
+                e.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
+                e.setClassName(getClass().getName());
+                e.setPackageName(getPackageName());
+                e.getText().add(getResources().getString(R.string.detailed_stock_message) + symbol);
+                manager.sendAccessibilityEvent(e);
+            }
+            GetHistoricDataCall historicObj = new GetHistoricDataCall(this, symbol);
+            historicObj.FetchData();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        lineChart = (LineChart) findViewById(R.id.chart);
-        GetHistoricDataCall historicObj = new GetHistoricDataCall(this, symbol);
-        historicObj.FetchData();
     }
 
 

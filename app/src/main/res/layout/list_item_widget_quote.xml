@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layoutDirection="locale">
+    <TextView
+        android:id="@+id/widget_stock_symbol"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.50"
+        android:textColor="@android:color/black"
+        tools:text="GOOG"
+        />
+    <TextView
+        android:id="@+id/widget_bid_price"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="0.50"
+        android:textDirection="inherit"
+        android:textAlignment="gravity"
+        tools:text="1000.00"
+        />
+</LinearLayout>
