@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,6 +56,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Context mContext;
   private Cursor mCursor;
   boolean isConnected;
+  AppBarLayout appbarLayout;
+  android.support.v7.widget.Toolbar toolbar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,12 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         networkToast();
       }
     }
+
+    appbarLayout = (AppBarLayout)findViewById(R.id.home_appbar);
+    toolbar = (android.support.v7.widget.Toolbar)appbarLayout.findViewById(R.id.home_toolbar);
+    toolbar.setTitle(getResources().getString(R.string.app_name));
+    setSupportActionBar(toolbar);
+
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
@@ -176,17 +185,19 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
   }
 
-  public void restoreActionBar() {
-    ActionBar actionBar = getSupportActionBar();
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-    actionBar.setDisplayShowTitleEnabled(true);
-    actionBar.setTitle(mTitle);
-  }
+//  public void restoreActionBar() {
+//
+//
+//    ActionBar actionBar = getSupportActionBar();
+//    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//    actionBar.setDisplayShowTitleEnabled(true);
+//    actionBar.setTitle(mTitle);
+//  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
       getMenuInflater().inflate(R.menu.my_stocks, menu);
-      restoreActionBar();
+    //  restoreActionBar();
       return true;
   }
 

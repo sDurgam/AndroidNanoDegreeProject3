@@ -1,9 +1,10 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.TextView;
@@ -34,6 +35,11 @@ public class DisplayStockGraphActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_selectedstock);
+        AppBarLayout appbarLayout = (AppBarLayout)findViewById(R.id.detailstock_appbar);
+        Toolbar toolbar = (android.support.v7.widget.Toolbar)appbarLayout.findViewById(R.id.detailstock_toolbar);
+        toolbar.setTitle(getResources().getString(R.string.app_name));
+        setSupportActionBar(toolbar);
+
         String selectedsymbolStr = getResources().getString(R.string.selectedsymbol);
         if(getIntent().getExtras() != null && getIntent().getExtras().getString(selectedsymbolStr) != null)
         {
@@ -71,10 +77,10 @@ public class DisplayStockGraphActivity extends AppCompatActivity
             entries.add(new Entry(data[i], i));
             i++;
         }
-        lineChart.getAxisLeft().setTextColor(Color.WHITE);
-        lineChart.getAxisRight().setTextColor(Color.WHITE);
-        lineChart.getXAxis().setTextColor(Color.WHITE);
-        lineChart.getXAxis().setTextColor(Color.WHITE);
+//        lineChart.getAxisLeft().setTextColor(Color.WHITE);
+//        lineChart.getAxisRight().setTextColor(Color.WHITE);
+//        lineChart.getXAxis().setTextColor(Color.WHITE);
+//        lineChart.getXAxis().setTextColor(Color.WHITE);
         LineDataSet dataset = new LineDataSet(entries, "Closing Price");
         LineData linedata = new LineData(labels, dataset);
         dataset.setColors(ColorTemplate.COLORFUL_COLORS); //
