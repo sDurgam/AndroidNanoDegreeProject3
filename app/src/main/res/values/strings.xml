@@ -22,4 +22,10 @@
   <string name="stocks_widget">StockHawk Widget</string>
   <string name="empty_stock_list">Stock List is empty</string>
   <string name="selectedsymbol">selectedsymbol</string>
+  <string name="tagstr">tag</string>
+  <string name="initstr">init</string>
+  <string name="symbolstr">symbol</string>
+  <string name="addstr">add</string>
+  <string name="existingstockstr">This stock is already saved!</string>
+  <string name="periodicstr">periodic</string>
 </resources>

@@ -11,4 +11,10 @@
     <string name="detailed_stock_message">fath sier alssahm mufassal ean :</string>
     <string name="empty_stock_list">qayimat al\'ashum farighatan</string>
     <string name="stocks_widget">StockHawk alqutaea</string>
+    <string name="tagstr">bitaqa</string>
+    <string name="initstr">init</string>
+    <string name="symbolstr">ramz</string>
+    <string name="addstr">\'iidafatan</string>
+    <string name="existingstockstr">ytm hifz hadhih al\'ashum bialfiel!</string>
+    <string name="periodicstr">dawri</string>
 </resources>

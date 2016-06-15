@@ -1,7 +1,6 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import android.app.LoaderManager;
-import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -56,8 +55,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Context mContext;
   private Cursor mCursor;
   boolean isConnected;
-  public static final String ACTION_DATA_UPDATED =
-          "com.sam_chordas.android.stockhawk.app.ACTION_DATA_UPDATED";
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +72,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mServiceIntent = new Intent(this, StockIntentService.class);
     if (savedInstanceState == null){
       // Run the initialize task service so that some stocks appear upon an empty database
-      mServiceIntent.putExtra("tag", "init");
+      mServiceIntent.putExtra(getResources().getString(R.string.tagstr), getResources().getString(R.string.initstr));
       if (isConnected){
         startService(mServiceIntent);
       } else{
@@ -95,25 +92,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 if(v.getTag() != null)
                 {
                   final String symbol = v.getTag().toString();
-                  //v.setContentDescription(mContext.getResources().getString(R.string.detailed_stock_message) + symbol);
-//                  AccessibilityManager manager = (AccessibilityManager)getSystemService(Context.ACCESSIBILITY_SERVICE);
-//                  if (manager.isEnabled()) {
-//                    AccessibilityEvent e = AccessibilityEvent.obtain();
-//                    e.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
-//                    e.setClassName(getClass().getName());
-//                    e.setPackageName(getPackageName());
-//                    e.getText().add(mContext.getResources().getString(R.string.detailed_stock_message) + symbol);
-//                    manager.sendAccessibilityEvent(e);
-//                  }
-//                  new Handler().postDelayed(new Runnable() {
-//                    public void run() {
-//                      Intent displaychartIntent = new Intent(mContext, DisplayStockGraphActivity.class);
-//                      displaychartIntent.putExtra("selectedsymbol", symbol);
-//                      mContext.startActivity(displaychartIntent);
-//                    }
-//                  }, 500);
                   Intent displaychartIntent = new Intent(mContext, DisplayStockGraphActivity.class);
-                  displaychartIntent.putExtra("selectedsymbol", symbol);
+                  displaychartIntent.putExtra(getResources().getString(R.string.selectedsymbol), symbol);
                   mContext.startActivity(displaychartIntent);
                 }
               }
@@ -138,15 +118,15 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                       new String[] { input.toString() }, null);
                   if (c.getCount() != 0) {
                     Toast toast =
-                        Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
+                        Toast.makeText(MyStocksActivity.this, getResources().getString(R.string.existingstockstr),
                             Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                     toast.show();
                     return;
                   } else {
                     // Add the stock to DB
-                    mServiceIntent.putExtra("tag", "add");
-                    mServiceIntent.putExtra("symbol", input.toString());
+                    mServiceIntent.putExtra(getResources().getString(R.string.tagstr), getResources().getString(R.string.addstr));
+                    mServiceIntent.putExtra(getResources().getString(R.string.symbolstr), input.toString());
                     startService(mServiceIntent);
                   }
                 }
@@ -167,7 +147,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     if (isConnected){
       long period = 3600L;
       long flex = 10L;
-      String periodicTag = "periodic";
+      //String periodicTag = "periodic";
 
       // create a periodic task to pull stocks once every hour after the app has been opened. This
       // is so Widget data stays up to date.
@@ -175,7 +155,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
           .setService(StockTaskService.class)
           .setPeriod(period)
           .setFlex(flex)
-          .setTag(periodicTag)
+          .setTag(getResources().getString(R.string.periodicstr))
           .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
           .setRequiresCharging(false)
           .build();
@@ -247,16 +227,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mCursorAdapter.swapCursor(data);
     ComponentName name = new ComponentName(this, StockHawkAppWidgetProvider.class);
     mCursor = data;
-  }
-
-  private void UpdateWidgets()
-  {
-    Context context = getApplicationContext();
-    ComponentName name = new ComponentName(this, StockHawkAppWidgetProvider.class);
-     int [] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
-    Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
-            .setPackage(context.getPackageName());
-    context.sendBroadcast(dataUpdatedIntent);
   }
 
   @Override
